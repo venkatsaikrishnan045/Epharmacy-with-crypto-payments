@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Pharmacy Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Light gray background */
+        }
+        .page-section {
+            display: none; /* Hide all pages by default */
+        }
+        .page-section.active {
+            display: block; /* Show active page */
+        }
+        /* Custom scrollbar for product list */
+        .product-grid-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .product-grid-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .product-grid-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .product-grid-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-teal-500 to-cyan-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <i class="fas fa-prescription-bottle-alt text-3xl mr-3"></i>
+                <h1 class="text-3xl font-bold">E-Pharmacy</h1>
+            </div>
+            <nav class="flex flex-wrap justify-center md:justify-start space-x-4 md:space-x-6 text-lg font-medium">
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="home-page">Home</a>
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="products-page">Products</a>
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="about-page">About</a>
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="contact-page">Contact</a>
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="wallet-page">Wallet</a>
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="order-tracking-page">Track Order</a>
+                <a href="#" class="nav-link hover:text-teal-200 transition duration-300 rounded-md px-2 py-1" data-page="recent-orders-page">Recent Orders</a>
+            </nav>
+            <div class="flex items-center mt-4 md:mt-0 space-x-4">
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Search products..." class="p-2 pl-10 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-300 shadow-sm">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                </div>
+                <button id="cart-button" class="relative p-2 rounded-full hover:bg-teal-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-teal-300">
+                    <i class="fas fa-shopping-cart text-2xl"></i>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center -mt-1 -mr-1">0</span>
+                </button>
+                <button id="login-signup-button" class="bg-white text-teal-600 px-4 py-2 rounded-full font-semibold hover:bg-teal-100 transition duration-300 shadow-md">Login / Signup</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+
+        <!-- Home Page -->
+        <section id="home-page" class="page-section active bg-white rounded-lg shadow-xl p-8 mb-8">
+            <div class="text-center">
+                <h2 class="text-5xl font-extrabold text-teal-700 mb-6 animate-fade-in-down">Welcome to E-Pharmacy!</h2>
+                <p class="text-xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">Your trusted online pharmacy for all your health and wellness needs. We offer a wide range of products, from medicines to personal care, delivered right to your doorstep.</p>
+                <img src="https://placehold.co/800x400/e0f2f7/26a69a?text=E-Pharmacy+Banner" alt="Pharmacy Banner" class="w-full h-auto rounded-lg shadow-md mb-8">
+                <button class="bg-teal-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105" onclick="showPage('products-page')">Explore Products</button>
+            </div>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 bg-teal-50 rounded-lg shadow-md">
+                    <i class="fas fa-truck-fast text-5xl text-teal-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-teal-800 mb-2">Fast Delivery</h3>
+                    <p class="text-gray-600">Get your medications delivered quickly and safely.</p>
+                </div>
+                <div class="p-6 bg-teal-50 rounded-lg shadow-md">
+                    <i class="fas fa-shield-alt text-5xl text-teal-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-teal-800 mb-2">Quality Products</h3>
+                    <p class="text-gray-600">Only genuine and high-quality products from trusted brands.</p>
+                </div>
+                <div class="p-6 bg-teal-50 rounded-lg shadow-md">
+                    <i class="fas fa-wallet text-5xl text-teal-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-teal-800 mb-2">Crypto Payments</h3>
+                    <p class="text-gray-600">Secure and convenient payments with cryptocurrencies.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login / Signup Page -->
+        <section id="auth-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-md mx-auto">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Login / Signup</h2>
+            <div class="flex justify-center mb-6">
+                <button id="show-login" class="px-6 py-3 rounded-l-lg font-semibold text-lg bg-teal-600 text-white shadow-md">Login</button>
+                <button id="show-signup" class="px-6 py-3 rounded-r-lg font-semibold text-lg bg-gray-200 text-gray-700 shadow-md">Signup</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="login-username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                    <input type="text" id="login-username" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Your Username">
+                </div>
+                <div>
+                    <label for="login-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="login-email" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="your@example.com" required>
+                </div>
+                <div>
+                    <label for="login-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                    <input type="password" id="login-password" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="********" required>
+                </div>
+                <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-full w-full transition duration-300 shadow-lg transform hover:scale-105">Login</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="space-y-6 hidden">
+                <div>
+                    <label for="signup-username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                    <input type="text" id="signup-username" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Your Username" required>
+                </div>
+                <div>
+                    <label for="signup-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="signup-email" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="your@example.com" required>
+                </div>
+                <div>
+                    <label for="signup-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                    <input type="password" id="signup-password" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="********" required>
+                </div>
+                <div>
+                    <label for="signup-confirm-password" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
+                    <input type="password" id="signup-confirm-password" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="********" required>
+                </div>
+                <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-full w-full transition duration-300 shadow-lg transform hover:scale-105">Signup</button>
+            </form>
+            <p id="auth-message" class="text-center text-sm mt-4 text-red-500"></p>
+        </section>
+
+        <!-- About Page -->
+        <section id="about-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">About Us</h2>
+            <div class="prose max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
+                <p class="mb-4">Welcome to E-Pharmacy, your reliable partner in health and wellness. Established with a vision to make healthcare accessible and convenient, we bring a comprehensive range of pharmaceutical products, over-the-counter medicines, and personal care items right to your fingertips.</p>
+                <p class="mb-4">At E-Pharmacy, we prioritize your health and safety. All our products are sourced from certified manufacturers and suppliers, ensuring the highest quality and authenticity. Our platform is designed for ease of use, allowing you to browse, select, and order products with just a few clicks.</p>
+                <p class="mb-4">We are committed to innovation, which is why we've integrated cutting-edge cryptocurrency payment options, providing you with secure and private transaction alternatives. Our dedicated team is always here to assist you, ensuring a seamless and satisfactory shopping experience.</p>
+                <p>Thank you for choosing E-Pharmacy. We look forward to serving your healthcare needs.</p>
+            </div>
+        </section>
+
+        <!-- Products Page -->
+        <section id="products-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Our Products</h2>
+            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 product-grid-container max-h-[70vh] overflow-y-auto p-4">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- Cart Page -->
+        <section id="cart-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Your Shopping Cart</h2>
+            <div id="cart-items" class="space-y-4">
+                <!-- Cart items will be dynamically loaded here -->
+                <p id="empty-cart-message" class="text-center text-gray-600 text-lg hidden">Your cart is empty.</p>
+            </div>
+            <div id="cart-summary" class="mt-8 pt-4 border-t-2 border-teal-200 flex justify-between items-center text-2xl font-bold text-teal-800">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <div class="mt-8 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="bg-gray-300 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-gray-400 transition duration-300 shadow-md" onclick="showPage('products-page')">Continue Shopping</button>
+                <button id="checkout-button" class="bg-teal-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105">Proceed to Checkout</button>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Contact Us</h2>
+            <div class="prose max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
+                <p class="mb-4">Have questions or need assistance? Our dedicated customer support team is here to help you.</p>
+                <p class="mb-4 text-center text-xl font-semibold text-teal-800">24/7 Customer Care Support Available!</p>
+                <p class="mb-4">You can reach us through the following methods:</p>
+                <ul class="list-disc list-inside mb-4">
+                    <li>Email: <a href="mailto:support@epharmacy.com" class="text-teal-600 hover:underline">support@epharmacy.com</a></li>
+                    <li>Phone: +1 (800) 123-4567</li>
+                    <li>Live Chat: Available on our homepage (simulated)</li>
+                </ul>
+                <p>Alternatively, fill out the form below and we will get back to you as soon as possible.</p>
+            </div>
+            <form class="space-y-6 mt-8">
+                <div>
+                    <label for="contact-name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                    <input type="text" id="contact-name" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Your Name" required>
+                </div>
+                <div>
+                    <label for="contact-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="contact-email" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="your@example.com" required>
+                </div>
+                <div>
+                    <label for="contact-message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
+                    <textarea id="contact-message" rows="5" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Your message..." required></textarea>
+                </div>
+                <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-full w-full transition duration-300 shadow-lg transform hover:scale-105">Send Message</button>
+            </form>
+        </section>
+
+        <!-- Wallet Page -->
+        <section id="wallet-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-2xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6">My Wallet</h2>
+            <p class="text-lg text-gray-700 mb-6">This section will display your integrated cryptocurrency wallet, showing your balances and transaction history. For a real application, this would connect to a secure wallet service or blockchain node.</p>
+            <div class="bg-teal-50 p-6 rounded-lg shadow-md mb-6">
+                <p class="text-xl font-semibold text-teal-800 mb-2">Current Balance (Simulated):</p>
+                <p class="text-4xl font-bold text-teal-600"><span id="wallet-balance-usd">0.00</span> USD</p>
+                <p class="text-4xl font-bold text-teal-600"><span id="wallet-balance-btc">0.00</span> BTC</p>
+                <p class="text-4xl font-bold text-teal-600"><span id="wallet-balance-eth">0.00</span> ETH</p>
+            </div>
+            <p class="text-gray-600">Future features here would include deposit, withdraw, and transaction history viewing.</p>
+            
+            <div class="mt-6 flex flex-col items-center space-y-4">
+                <div class="flex items-center space-x-2 w-full max-w-sm">
+                    <input type="number" id="deposit-amount-input" class="shadow appearance-none border rounded-lg flex-grow py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Amount to deposit (USD)" min="0.01" step="0.01">
+                    <button id="deposit-button" class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-300 shadow-lg transform hover:scale-105">Deposit</button>
+                </div>
+                <button id="quick-payment-button" class="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition duration-300 shadow-lg transform hover:scale-105 w-full max-w-sm">Make a Quick Payment</button>
+                <button class="bg-teal-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105 w-full max-w-sm" onclick="showPage('home-page')">Back to Home</button>
+            </div>
+        </section>
+
+        <!-- Order Tracking Page -->
+        <section id="order-tracking-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-xl mx-auto">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Track Your Order</h2>
+            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                <input type="text" id="order-id-input" class="shadow appearance-none border rounded-lg flex-grow py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Enter Order ID (e.g., 12345)">
+                <button id="track-order-button" class="bg-teal-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105">Track Order</button>
+            </div>
+            <div id="order-status-display" class="bg-teal-50 p-6 rounded-lg shadow-inner text-center hidden">
+                <p class="text-xl font-semibold text-teal-800 mb-2">Order ID: <span id="displayed-order-id" class="font-bold"></span></p>
+                <p class="text-2xl font-bold text-gray-800">Status: <span id="displayed-order-status" class="text-green-600"></span></p>
+                <p id="order-details-message" class="text-gray-600 mt-4"></p>
+            </div>
+            <p id="order-tracking-message" class="text-center text-sm mt-4 text-red-500 hidden"></p>
+        </section>
+
+        <!-- Recent Orders Page -->
+        <section id="recent-orders-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Your Recent Orders</h2>
+            <div id="recent-orders-list" class="space-y-6">
+                <p id="no-recent-orders-message" class="text-center text-gray-600 text-lg hidden">You have no recent orders.</p>
+                <!-- Recent orders will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- Checkout Page -->
+        <section id="checkout-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6 text-center">Checkout</h2>
+            <form id="checkout-form" class="space-y-6">
+                <h3 class="text-2xl font-bold text-teal-600 mb-4">Shipping Information</h3>
+                <div>
+                    <label for="full-name" class="block text-gray-700 text-sm font-bold mb-2">Full Name:</label>
+                    <input type="text" id="full-name" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                </div>
+                <div>
+                    <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Address:</label>
+                    <input type="text" id="address" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="city" class="block text-gray-700 text-sm font-bold mb-2">City:</label>
+                        <input type="text" id="city" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                    </div>
+                    <div>
+                        <label for="zip-code" class="block text-gray-700 text-sm font-bold mb-2">Zip Code:</label>
+                        <input type="text" id="zip-code" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="country" class="block text-gray-700 text-sm font-bold mb-2">Country:</label>
+                    <input type="text" id="country" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                </div>
+
+                <h3 class="text-2xl font-bold text-teal-600 mb-4 mt-8">Payment Method</h3>
+                <div class="flex items-center mb-4">
+                    <input type="radio" id="payment-crypto" name="payment-method" value="crypto" class="form-radio h-5 w-5 text-teal-600" checked>
+                    <label for="payment-crypto" class="ml-2 text-gray-700 text-lg">Cryptocurrency (Bitcoin, Ethereum, etc.)</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="radio" id="payment-fiat" name="payment-method" value="fiat" class="form-radio h-5 w-5 text-teal-600">
+                    <label for="payment-fiat" class="ml-2 text-gray-700 text-lg">Fiat Currency (Credit/Debit Card, Bank Transfer)</label>
+                </div>
+
+                <div id="checkout-total-display" class="text-right text-2xl font-bold text-teal-800 mt-8">
+                    Order Total: <span id="checkout-total-amount">$0.00</span>
+                </div>
+
+                <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-full w-full transition duration-300 shadow-lg transform hover:scale-105">Place Order</button>
+            </form>
+        </section>
+
+        <!-- Transaction Page (Loading/Processing) -->
+        <section id="transaction-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-md mx-auto text-center">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6">Processing Your Order...</h2>
+            <div class="flex justify-center items-center mb-6">
+                <i class="fas fa-spinner fa-spin text-6xl text-teal-600"></i>
+            </div>
+            <p class="text-lg text-gray-700">Please wait while we process your transaction. This may take a few moments.</p>
+            <p class="text-sm text-gray-500 mt-4">Do not close this window.</p>
+        </section>
+
+        <!-- Crypto Payment Page -->
+        <section id="crypto-payment-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6">Complete Your Payment</h2>
+            <p class="text-lg text-gray-700 mb-6">Please send <span id="crypto-amount" class="font-bold text-teal-600">0.00 BTC</span> to the address below.</p>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
+                <p class="text-xl font-semibold text-gray-800 mb-2">Bitcoin Address:</p>
+                <div class="flex items-center justify-center space-x-2">
+                    <span id="bitcoin-address" class="text-xl font-mono text-gray-900 break-all">1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</span>
+                    <button class="copy-button text-teal-600 hover:text-teal-800 transition duration-300" data-copy-target="bitcoin-address">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <img src="https://placehold.co/150x150/e0f2f7/26a69a?text=QR+Code" alt="QR Code" class="mx-auto my-4 rounded-md shadow-sm">
+                <p class="text-sm text-gray-600">Scan QR code or copy address to send payment.</p>
+            </div>
+            <p class="text-md text-gray-700 mb-6">Once payment is confirmed on the blockchain, your order will be completed.</p>
+            <button id="simulate-crypto-payment" class="bg-teal-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105">Simulate Payment Confirmation</button>
+            <p id="payment-status-message" class="text-center text-sm mt-4 text-green-600 hidden"></p>
+        </section>
+
+        <!-- Fiat Payment Page (Simulated) -->
+        <section id="fiat-payment-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-md mx-auto text-center">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6">Simulating Fiat Payment...</h2>
+            <div class="flex justify-center items-center mb-6">
+                <i class="fas fa-credit-card text-6xl text-teal-600"></i>
+            </div>
+            <p class="text-lg text-gray-700">Your payment via Fiat Currency is being processed.</p>
+            <p class="text-sm text-gray-500 mt-4">In a real application, this would involve a secure payment gateway redirect.</p>
+            <button id="simulate-fiat-payment" class="bg-teal-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105 mt-6">Simulate Payment Success</button>
+            <p id="fiat-payment-status-message" class="text-center text-sm mt-4 text-green-600 hidden"></p>
+        </section>
+
+        <!-- Order Complete Page -->
+        <section id="order-complete-page" class="page-section bg-white rounded-lg shadow-xl p-8 mb-8 max-w-md mx-auto text-center">
+            <h2 class="text-4xl font-bold text-teal-700 mb-6">Order Placed Successfully!</h2>
+            <i class="fas fa-check-circle text-8xl text-green-500 mb-6 animate-bounce-in"></i>
+            <p class="text-lg text-gray-700 mb-8">Thank you for your purchase. Your order has been successfully placed and will be processed shortly.</p>
+            <div id="billing-details-display" class="bg-gray-100 p-4 rounded-lg shadow-inner mt-6 text-left">
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">Billing Details:</h3>
+                <p><strong>Full Name:</strong> <span id="billing-full-name"></span></p>
+                <p><strong>Address:</strong> <span id="billing-address"></span></p>
+                <p><strong>City:</strong> <span id="billing-city"></span></p>
+                <p><strong>Zip Code:</strong> <span id="billing-zip-code"></span></p>
+                <p><strong>Country:</strong> <span id="billing-country"></span></p>
+                <p class="mt-2"><strong>Payment Method:</strong> <span id="billing-payment-method"></span></p>
+                <p class="text-lg font-bold mt-2"><strong>Total Paid:</strong> <span id="billing-total-paid"></span></p>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+                <button class="bg-teal-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-teal-700 transition duration-300 shadow-lg transform hover:scale-105" onclick="showPage('products-page')">Continue Shopping</button>
+                <button class="bg-gray-300 text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-gray-400 transition duration-300 shadow-md" onclick="showPage('home-page')">Back to Home</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-6 text-center mt-auto shadow-inner">
+        <div class="container mx-auto">
+            <p>&copy; 2025 E-Pharmacy. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="hover:text-teal-400 transition duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
+                <a href="#" class="hover:text-teal-400 transition duration-300"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="hover:text-teal-400 transition duration-300"><i class="fab fa-instagram text-xl"></i></a>
+                <a href="#" class="hover:text-teal-400 transition duration-300"><i class="fab fa-linkedin-in text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Message Box for Alerts -->
+    <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-sm w-full text-center transform scale-95 transition-transform duration-300 ease-out">
+            <h3 id="message-box-title" class="text-2xl font-bold text-gray-800 mb-4"></h3>
+            <p id="message-box-content" class="text-gray-700 mb-6"></p>
+            <button id="message-box-ok" class="bg-teal-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-teal-700 transition duration-300 shadow-md">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Global Variables ---
+        const products = [
+            { id: 1, name: "Paracetamol 500mg", price: 2.50, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Pain Relief" },
+            { id: 2, name: "Amoxicillin 250mg", price: 15.00, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Antibiotics" },
+            { id: 3, name: "Ibuprofen 200mg", price: 3.20, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Pain Relief" },
+            { id: 4, name: "Vitamin C 1000mg", price: 8.99, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Vitamins" },
+            { id: 5, name: "Multivitamin Tablets", price: 12.50, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Vitamins" },
+            { id: 6, name: "Antacid Liquid", price: 6.75, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Digestive Health" },
+            { id: 7, name: "Cough Syrup", price: 9.50, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Cold & Flu" },
+            { id: 8, name: "Band-Aids (Assorted)", price: 4.00, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "First Aid" },
+            { id: 9, name: "Hand Sanitizer", price: 5.99, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Personal Care" },
+            { id: 10, name: "Digital Thermometer", price: 18.00, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Medical Devices" },
+            { id: 11, name: "Blood Pressure Monitor", price: 45.00, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Medical Devices" },
+            { id: 12, name: "Protein Powder (Whey)", price: 35.00, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Supplements" },
+            { id: 13, name: "Omega-3 Capsules", price: 22.00, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Supplements" },
+            { id: 14, name: "Topical Pain Relief Cream", price: 10.50, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Pain Relief" },
+            { id: 15, name: "Allergy Relief Tablets", price: 11.25, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Allergy" },
+            { id: 16, name: "Eye Drops (Lubricating)", price: 7.80, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Eye Care" },
+            { id: 17, name: "Nasal Spray", price: 8.10, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Cold & Flu" },
+            { id: 18, name: "First Aid Kit (Basic)", price: 25.00, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "First Aid" },
+            { id: 19, name: "Sanitary Pads (Pack)", price: 6.50, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Personal Care" },
+            { id: 20, name: "Acne Treatment Gel", price: 14.00, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Skin Care" },
+            { id: 21, name: "Sunscreen SPF 50", price: 16.00, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Skin Care" },
+            { id: 22, name: "Dental Floss", price: 3.00, image: "https://img.freepik.com/free-vector/hand-drawn-pill-cartoon-illustration_23-2150622781.jpg?semt=ais_hybrid&w=740", category: "Oral Care" },
+            { id: 23, name: "Toothpaste (Fluoride)", price: 4.50, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Oral Care" },
+            { id: 24, name: "Shampoo (Anti-dandruff)", price: 9.00, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Hair Care" },
+            { id: 25, name: "Conditioner (Moisturizing)", price: 9.00, image: "https://th.bing.com/th/id/R.7ef1bfca50846b42aa4f184eb54bcb69?rik=wZsIseAAZpxm5Q&riu=http%3a%2f%2fclipart-library.com%2fimages_k%2fpill-bottle-transparent-background%2fpill-bottle-transparent-background-9.png&ehk=gTuGnVsJ%2bF0%2fHUScV9Ri465aq0N6KypDvJGG0Datobo%3d&risl=&pid=ImgRaw&r=0", category: "Hair Care" },
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('epharmacyCart')) || [];
+        let currentPaymentAmountUsd = 0; // Global variable to store the amount for crypto payment
+        let simulatedWalletBalanceUsd = 0; // New: Simulated wallet balance in USD
+        let loggedInUsername = null; // New: To store the logged-in username
+        let lastOrderBillingDetails = null; // New: To store billing details for display
+        // New: Array to store simulated orders
+        let simulatedOrders = JSON.parse(localStorage.getItem('simulatedOrders')) || [];
+
+
+        // --- DOM Elements ---
+        const pageSections = document.querySelectorAll('.page-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const cartButton = document.getElementById('cart-button');
+        const cartCountSpan = document.getElementById('cart-count');
+        const loginSignupButton = document.getElementById('login-signup-button');
+        const productListDiv = document.getElementById('product-list');
+        const cartItemsDiv = document.getElementById('cart-items');
+        const cartTotalSpan = document.getElementById('cart-total');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutButton = document.getElementById('checkout-button');
+        const checkoutForm = document.getElementById('checkout-form');
+        const checkoutTotalAmountSpan = document.getElementById('checkout-total-amount');
+        const searchInput = document.getElementById('search-input');
+        const cryptoAmountSpan = document.getElementById('crypto-amount');
+        const simulateCryptoPaymentButton = document.getElementById('simulate-crypto-payment');
+        const paymentStatusMessage = document.getElementById('payment-status-message');
+        const messageBox = document.getElementById('message-box');
+        const messageBoxTitle = document.getElementById('message-box-title');
+        const messageBoxContent = document.getElementById('message-box-content');
+        const messageBoxOkButton = document.getElementById('message-box-ok');
+
+        // Auth page elements
+        const showLoginBtn = document.getElementById('show-login');
+        const showSignupBtn = document.getElementById('show-signup');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const authMessage = document.getElementById('auth-message');
+        const loginUsernameInput = document.getElementById('login-username');
+
+        // Wallet page elements
+        const depositButton = document.getElementById('deposit-button');
+        const quickPaymentButton = document.getElementById('quick-payment-button');
+        const depositAmountInput = document.getElementById('deposit-amount-input');
+        const walletBalanceUsdSpan = document.getElementById('wallet-balance-usd');
+        const walletBalanceBtcSpan = document.getElementById('wallet-balance-btc');
+        const walletBalanceEthSpan = document.getElementById('wallet-balance-eth');
+
+        // Order Tracking elements
+        const orderIdInput = document.getElementById('order-id-input');
+        const trackOrderButton = document.getElementById('track-order-button');
+        const orderStatusDisplay = document.getElementById('order-status-display');
+        const displayedOrderId = document.getElementById('displayed-order-id');
+        const displayedOrderStatus = document.getElementById('displayed-order-status');
+        const orderDetailsMessage = document.getElementById('order-details-message');
+        const orderTrackingMessage = document.getElementById('order-tracking-message');
+
+        // Order Complete page billing details
+        const billingFullName = document.getElementById('billing-full-name');
+        const billingAddress = document.getElementById('billing-address');
+        const billingCity = document.getElementById('billing-city');
+        const billingZipCode = document.getElementById('billing-zip-code');
+        const billingCountry = document.getElementById('billing-country');
+        const billingPaymentMethod = document.getElementById('billing-payment-method');
+        const billingTotalPaid = document.getElementById('billing-total-paid');
+
+        // Recent Orders elements
+        const recentOrdersList = document.getElementById('recent-orders-list');
+        const noRecentOrdersMessage = document.getElementById('no-recent-orders-message');
+
+
+        // --- Helper Functions ---
+
+        /**
+         * Displays a custom message box instead of alert().
+         * @param {string} title - The title of the message box.
+         * @param {string} content - The content/message to display.
+         */
+        function showMessageBox(title, content) {
+            messageBoxTitle.textContent = title;
+            messageBoxContent.textContent = content;
+            messageBox.classList.remove('hidden');
+            // Animate in
+            messageBox.querySelector('div').classList.remove('scale-95');
+            messageBox.querySelector('div').classList.add('scale-100');
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function hideMessageBox() {
+            // Animate out
+            messageBox.querySelector('div').classList.remove('scale-100');
+            messageBox.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 300); // Match transition duration
+        }
+
+        /**
+         * Shows a specific page section and hides others.
+         * @param {string} pageId - The ID of the page section to show.
+         * @param {object} [data=null] - Optional data to pass to the page (e.g., billing details).
+         */
+        function showPage(pageId, data = null) {
+            pageSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            // Ensure the element exists before trying to access its classList
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            } else {
+                console.error(`Error: Page section with ID "${pageId}" not found.`);
+                // Optionally, redirect to a default page or show an error message
+                // showMessageBox('Error', `Page "${pageId}" not found.`);
+                return; // Stop execution if page not found
+            }
+
+
+            // Update active nav link styling
+            navLinks.forEach(link => {
+                if (link.dataset.page === pageId) {
+                    link.classList.add('bg-teal-700', 'text-white');
+                    link.classList.remove('hover:text-teal-200');
+                } else {
+                    link.classList.remove('bg-teal-700', 'text-white');
+                    link.classList.add('hover:text-teal-200');
+                }
+            });
+
+            // Specific page updates
+            if (pageId === 'products-page') {
+                renderProducts(products); // Re-render products on page load
+            } else if (pageId === 'cart-page') {
+                renderCart();
+            } else if (pageId === 'checkout-page') {
+                updateCheckoutTotal();
+            } else if (pageId === 'auth-page') {
+                // Ensure login form is shown by default on auth page
+                showLoginBtn.click();
+            } else if (pageId === 'crypto-payment-page') {
+                // Update crypto amount display based on currentPaymentAmountUsd
+                cryptoAmountSpan.textContent = `${(currentPaymentAmountUsd / 30000).toFixed(6)} BTC`; // Example conversion rate
+            } else if (pageId === 'wallet-page') { // New: Update wallet display when wallet page is shown
+                updateWalletDisplay();
+            } else if (pageId === 'order-complete-page' && data) { // Handle billing details on order complete
+                displayBillingDetails(data);
+            } else if (pageId === 'recent-orders-page') { // New: Render recent orders
+                renderRecentOrders();
+            }
+            window.scrollTo(0, 0); // Scroll to top of the page
+        }
+
+        /**
+         * Updates the display of the login/signup button based on loggedInUsername.
+         */
+        function updateAuthButtonDisplay() {
+            if (loggedInUsername) {
+                loginSignupButton.textContent = `Hi, ${loggedInUsername}`;
+                loginSignupButton.classList.remove('bg-white', 'text-teal-600', 'hover:bg-teal-100');
+                loginSignupButton.classList.add('bg-teal-700', 'text-white', 'hover:bg-teal-800');
+            } else {
+                loginSignupButton.textContent = 'Login / Signup';
+                loginSignupButton.classList.remove('bg-teal-700', 'text-white', 'hover:bg-teal-800');
+                loginSignupButton.classList.add('bg-white', 'text-teal-600', 'hover:bg-teal-100');
+            }
+        }
+
+        /**
+         * Renders the product list on the products page.
+         * @param {Array} productsToRender - The array of products to display.
+         */
+        function renderProducts(productsToRender) {
+            productListDiv.innerHTML = ''; // Clear existing products
+            if (productsToRender.length === 0) {
+                productListDiv.innerHTML = `<p class="col-span-full text-center text-gray-600 text-lg">No products found matching your search.</p>`;
+                return;
+            }
+
+            productsToRender.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col items-center p-4';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="w-32 h-32 object-contain mb-4 rounded-md">
+                    <h3 class="text-lg font-semibold text-gray-800 text-center mb-2">${product.name}</h3>
+                    <p class="text-teal-600 font-bold text-xl mb-3">$${product.price.toFixed(2)}</p>
+                    <div class="flex items-center justify-center mb-3 space-x-2">
+                        <button class="qty-decrease-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 transition" data-product-id="${product.id}">-</button>
+                        <span class="product-qty-display text-lg font-semibold" data-product-id="${product.id}">1</span>
+                        <button class="qty-increase-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 transition" data-product-id="${product.id}">+</button>
+                    </div>
+                    <div class="flex flex-col space-y-2 w-full">
+                        <button class="add-to-cart-btn bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-600 transition duration-300 text-sm font-medium shadow-sm" data-product-id="${product.id}">Add to Cart</button>
+                        <button class="buy-now-btn bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600 transition duration-300 text-sm font-medium shadow-sm" data-product-id="${product.id}">Buy Now</button>
+                    </div>
+                `;
+                productListDiv.appendChild(productCard);
+            });
+
+            // Add event listeners for new buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.dataset.productId);
+                    // Find the quantity display for this product
+                    const productCard = e.target.closest('.product-card') || e.target.parentElement.parentElement; // Adjust if needed
+                    const qtySpan = productCard.querySelector('.product-qty-display');
+                    const quantity = parseInt(qtySpan.textContent);
+                    addToCart(productId, quantity); // Pass quantity
+                });
+            });
+
+            document.querySelectorAll('.buy-now-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.dataset.productId);
+                    // Find the quantity display for this product
+                    const productCard = e.target.closest('.product-card') || e.target.parentElement.parentElement; // Adjust if needed
+                    const qtySpan = productCard.querySelector('.product-qty-display');
+                    const quantity = parseInt(qtySpan.textContent);
+                    buyNow(productId, quantity); // Pass quantity
+                });
+            });
+
+            // Add event listeners for quantity buttons
+            document.querySelectorAll('.qty-increase-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.dataset.productId);
+                    const qtySpan = e.target.previousElementSibling; // The span is the previous sibling
+                    let currentQty = parseInt(qtySpan.textContent);
+                    currentQty++;
+                    qtySpan.textContent = currentQty;
+                });
+            });
+
+            document.querySelectorAll('.qty-decrease-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.dataset.productId);
+                    const qtySpan = e.target.nextElementSibling; // The span is the next sibling
+                    let currentQty = parseInt(qtySpan.textContent);
+                    if (currentQty > 1) {
+                        currentQty--;
+                        qtySpan.textContent = currentQty;
+                    }
+                });
+            });
+        }
+
+        /**
+         * Adds a product to the cart or increments its quantity.
+         * @param {number} productId - The ID of the product to add.
+         * @param {number} quantity - The quantity to add.
+         */
+        function addToCart(productId, quantity = 1) { // Default to 1 if not provided
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ ...product, quantity: quantity });
+            }
+            saveCart();
+            updateCartCount();
+            showMessageBox('Added to Cart', `${quantity} x ${product.name} has been added to your cart.`);
+        }
+
+        /**
+         * Initiates a direct purchase for a single product.
+         * @param {number} productId - The ID of the product to buy.
+         * @param {number} quantity - The quantity to buy.
+         */
+        function buyNow(productId, quantity = 1) { // Default to 1 if not provided
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            // Clear current cart and add only this product with specified quantity
+            cart = [{ ...product, quantity: quantity }];
+            saveCart();
+            updateCartCount();
+            showMessageBox('Direct Purchase', `Proceeding to checkout with ${quantity} x ${product.name}.`);
+            showPage('checkout-page');
+        }
+
+        /**
+         * Saves the current cart state to localStorage.
+         */
+        function saveCart() {
+            localStorage.setItem('epharmacyCart', JSON.stringify(cart));
+        }
+
+        /**
+         * Updates the cart icon count in the header.
+         */
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountSpan.textContent = totalItems;
+        }
+
+        /**
+         * Renders the cart items on the cart page.
+         */
+        function renderCart() {
+            cartItemsDiv.innerHTML = ''; // Clear existing cart items
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                checkoutButton.disabled = true;
+                checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                checkoutButton.disabled = false;
+                checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.className = 'flex items-center justify-between bg-teal-50 p-4 rounded-lg shadow-sm';
+                    cartItemDiv.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-contain rounded-md">
+                            <div>
+                                <h3 class="font-semibold text-gray-800">${item.name}</h3>
+                                <p class="text-teal-600">$${item.price.toFixed(2)} per item</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center border border-gray-300 rounded-md">
+                                <button class="quantity-btn p-2 hover:bg-gray-200 rounded-l-md" data-id="${item.id}" data-action="decrease">-</button>
+                                <span class="px-3 py-1 text-gray-800">${item.quantity}</span>
+                                <button class="quantity-btn p-2 hover:bg-gray-200 rounded-r-md" data-id="${item.id}" data-action="increase">+</button>
+                            </div>
+                            <span class="font-bold text-gray-800 w-20 text-right">$${itemTotal.toFixed(2)}</span>
+                            <button class="remove-from-cart-btn text-red-500 hover:text-red-700 transition duration-300" data-id="${item.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    cartItemsDiv.appendChild(cartItemDiv);
+                });
+            }
+            cartTotalSpan.textContent = `$${total.toFixed(2)}`;
+            updateCartCount();
+
+            // The event listeners for quantity and remove buttons are now handled by delegation below.
+        }
+
+        /**
+         * Updates the quantity of an item in the cart.
+         * @param {number} productId - The ID of the product.
+         * @param {string} action - 'increase' or 'decrease'.
+         */
+        function updateCartQuantity(productId, action) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                if (action === 'increase') {
+                    item.quantity++;
+                } else if (action === 'decrease') {
+                    item.quantity--;
+                    if (item.quantity <= 0) {
+                        removeFromCart(productId);
+                        return;
+                    }
+                }
+                saveCart();
+                renderCart(); // Re-render the cart to reflect changes
+            }
+        }
+
+        /**
+         * Removes an item from the cart.
+         * @param {number} productId - The ID of the product to remove.
+         */
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCart();
+            renderCart();
+            showMessageBox('Item Removed', 'Product removed from cart.');
+        }
+
+        /**
+         * Updates the total amount displayed on the checkout page and sets currentPaymentAmountUsd.
+         */
+        function updateCheckoutTotal() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            checkoutTotalAmountSpan.textContent = `$${total.toFixed(2)}`;
+            currentPaymentAmountUsd = total; // Set the global payment amount
+        }
+
+        /**
+         * Updates the simulated wallet balance display.
+         */
+        function updateWalletDisplay() {
+            walletBalanceUsdSpan.textContent = simulatedWalletBalanceUsd.toFixed(2);
+            // Arbitrary conversion rates for simulation
+            walletBalanceBtcSpan.textContent = (simulatedWalletBalanceUsd / 30000).toFixed(6);
+            walletBalanceEthSpan.textContent = (simulatedWalletBalanceUsd / 2000).toFixed(6);
+        }
+
+        /**
+         * Simulates order tracking. In a real app, this would fetch data from the backend.
+         * @param {string} orderId - The order ID to track.
+         */
+        function trackOrder(orderId) {
+            orderStatusDisplay.classList.add('hidden');
+            orderTrackingMessage.classList.add('hidden');
+            orderDetailsMessage.textContent = ''; // Clear previous details
+
+            // Simulate different statuses based on order ID
+            let status = '';
+            let details = '';
+            let textColorClass = '';
+
+            // Check if the order exists in simulatedOrders
+            const order = simulatedOrders.find(o => o.orderId === orderId);
+
+            if (order) {
+                // For a more dynamic simulation, you could have different statuses based on time or random
+                const now = new Date();
+                const orderDate = new Date(order.orderDate);
+                const diffHours = Math.abs(now - orderDate) / 36e5; // difference in hours
+
+                if (diffHours < 0.5) { // Less than 30 mins
+                    status = 'Processing';
+                    details = `Your order is being prepared. Payment via ${order.paymentMethod}.`;
+                    textColorClass = 'text-orange-500';
+                } else if (diffHours < 24) { // Less than 24 hours
+                    status = 'Shipped';
+                    details = `Your order has been shipped! Tracking number: ${orderId}-ABC. Expected delivery in 1-2 business days.`;
+                    textColorClass = 'text-blue-600';
+                } else {
+                    status = 'Delivered';
+                    details = `Your order was successfully delivered on ${orderDate.toLocaleDateString()}.`;
+                    textColorClass = 'text-green-600';
+                }
+            } else {
+                status = 'Not Found';
+                details = 'Please check the order ID and try again.';
+                textColorClass = 'text-red-500';
+            }
+
+            displayedOrderId.textContent = orderId;
+            displayedOrderStatus.textContent = status;
+            displayedOrderStatus.className = `font-bold ${textColorClass}`; // Apply color based on status
+            orderDetailsMessage.textContent = details;
+
+            orderStatusDisplay.classList.remove('hidden');
+        }
+
+        /**
+         * Displays the captured billing details on the order complete page.
+         * @param {object} details - Object containing billing and order summary details.
+         */
+        function displayBillingDetails(details) {
+            billingFullName.textContent = details.fullName;
+            billingAddress.textContent = details.address;
+            billingCity.textContent = details.city;
+            billingZipCode.textContent = details.zipCode;
+            billingCountry.textContent = details.country;
+            billingPaymentMethod.textContent = details.paymentMethod === 'crypto' ? 'Cryptocurrency' : 'Fiat Currency';
+            billingTotalPaid.textContent = `$${details.totalPaid.toFixed(2)}`;
+        }
+
+        /**
+         * Renders the list of recent orders on the recent orders page.
+         */
+        function renderRecentOrders() {
+            recentOrdersList.innerHTML = ''; // Clear existing orders
+            if (simulatedOrders.length === 0) {
+                noRecentOrdersMessage.classList.remove('hidden');
+                return;
+            } else {
+                noRecentOrdersMessage.classList.add('hidden');
+            }
+
+            // Sort orders by date descending
+            const sortedOrders = [...simulatedOrders].sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
+            sortedOrders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'bg-teal-50 p-6 rounded-lg shadow-md mb-4 border border-teal-200';
+                orderCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-xl font-bold text-teal-800">Order ID: ${order.orderId}</h3>
+                        <span class="text-gray-600 text-sm">${new Date(order.orderDate).toLocaleString()}</span>
+                    </div>
+                    <p class="text-lg text-gray-700 mb-2">Total: <span class="font-semibold">$${order.totalAmount.toFixed(2)}</span></p>
+                    <p class="text-gray-700 mb-3">Payment Method: <span class="font-semibold">${order.paymentMethod === 'crypto' ? 'Cryptocurrency' : 'Fiat Currency'}</span></p>
+                    <p class="text-gray-700 font-semibold">Items:</p>
+                    <ul class="list-disc list-inside text-gray-600 mb-3">
+                        ${order.items.map(item => `<li>${item.quantity} x ${item.name} ($${item.price.toFixed(2)} each)</li>`).join('')}
+                    </ul>
+                    <button class="bg-teal-500 text-white px-4 py-2 rounded-full text-sm hover:bg-teal-600 transition duration-300" onclick="showPage('order-tracking-page'); document.getElementById('order-id-input').value = '${order.orderId}';">Track This Order</button>
+                `;
+                recentOrdersList.appendChild(orderCard);
+            });
+        }
+
+
+        // --- Event Listeners ---
+
+        // Navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage(e.target.dataset.page);
+            });
+        });
+
+        // Cart button
+        cartButton.addEventListener('click', () => {
+            showPage('cart-page');
+        });
+
+        // Login/Signup button
+        loginSignupButton.addEventListener('click', () => {
+            if (loggedInUsername) {
+                // If already logged in, clicking the button simulates logout
+                loggedInUsername = null;
+                // Clear simulated orders on logout (optional, depending on desired behavior)
+                simulatedOrders = [];
+                localStorage.removeItem('simulatedOrders');
+                updateAuthButtonDisplay();
+                showMessageBox('Logged Out', 'You have been successfully logged out.');
+                showPage('home-page'); // Redirect to home after logout
+            } else {
+                // If not logged in, show the auth page
+                showPage('auth-page');
+            }
+        });
+
+        // Auth page tab switching
+        showLoginBtn.addEventListener('click', () => {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            showLoginBtn.classList.add('bg-teal-600', 'text-white');
+            showLoginBtn.classList.remove('bg-gray-200', 'text-gray-700');
+            showSignupBtn.classList.remove('bg-teal-600', 'text-white');
+            showSignupBtn.classList.add('bg-gray-200', 'text-gray-700');
+            authMessage.textContent = '';
+        });
+
+        showSignupBtn.addEventListener('click', () => {
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            showSignupBtn.classList.add('bg-teal-600', 'text-white');
+            showSignupBtn.classList.remove('bg-gray-200', 'text-gray-700');
+            showLoginBtn.classList.remove('bg-teal-600', 'text-white');
+            showLoginBtn.classList.add('bg-gray-200', 'text-gray-700');
+            authMessage.textContent = '';
+        });
+
+        // Login form submission (simulated)
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real app, send data to Python backend for authentication
+            const username = loginUsernameInput.value; // Get username from input
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username && !email) {
+                authMessage.textContent = 'Please enter either username or email.';
+                authMessage.style.color = 'red';
+                return;
+            }
+
+            console.log('Login attempt:', { username, email, password });
+            authMessage.textContent = 'Login simulated. In a real app, this would verify credentials with backend.';
+            authMessage.style.color = 'green';
+            
+            // Simulate successful login: Prioritize username if provided, else use email prefix
+            loggedInUsername = username || email.split('@')[0]; 
+            updateAuthButtonDisplay();
+
+            showMessageBox('Login Successful', `Welcome back, ${loggedInUsername}! (Simulated Login)`);
+            setTimeout(() => {
+                hideMessageBox();
+                showPage('home-page'); // Redirect to home after simulated login
+            }, 1500);
+        });
+
+        // Signup form submission (simulated)
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real app, send data to Python backend for user registration
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                authMessage.textContent = 'Passwords do not match!';
+                authMessage.style.color = 'red';
+                return;
+            }
+            console.log('Signup attempt:', { username, email, password });
+            authMessage.textContent = 'Signup simulated. In a real app, this would register user with backend.';
+            authMessage.style.color = 'green';
+
+            // Simulate successful signup
+            loggedInUsername = username;
+            updateAuthButtonDisplay();
+
+            showMessageBox('Signup Successful', `Account created for ${loggedInUsername}! (Simulated Signup)`);
+            setTimeout(() => {
+                hideMessageBox();
+                showPage('home-page'); // Redirect to home after simulated signup
+            }, 1500);
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            renderProducts(filteredProducts);
+        });
+
+        // Event listener for the "Proceed to Checkout" button on the Cart Page
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length === 0) {
+                showMessageBox('Cart Empty', 'Please add items to your cart before checking out.');
+                return;
+            }
+            showPage('checkout-page');
+        });
+
+        // Checkout form submission (this is for the form on the actual checkout page)
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (cart.length === 0) {
+                showMessageBox('Cart Empty', 'Please add items to your cart before checking out.');
+                return;
+            }
+
+            // Capture billing details
+            lastOrderBillingDetails = {
+                fullName: document.getElementById('full-name').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                zipCode: document.getElementById('zip-code').value,
+                country: document.getElementById('country').value,
+                paymentMethod: document.querySelector('input[name="payment-method"]:checked').value,
+                totalPaid: currentPaymentAmountUsd // Use the calculated total
+            };
+
+            const selectedPaymentMethod = lastOrderBillingDetails.paymentMethod;
+
+            if (selectedPaymentMethod === 'crypto') {
+                // Check if wallet balance is sufficient for crypto payment
+                if (simulatedWalletBalanceUsd < currentPaymentAmountUsd) {
+                    showMessageBox('Insufficient Funds', `Your simulated wallet balance ($${simulatedWalletBalanceUsd.toFixed(2)}) is not enough for this order ($${currentPaymentAmountUsd.toFixed(2)}). Please deposit more funds or choose another payment method.`);
+                    return; // Stop checkout if funds are insufficient
+                }
+
+                showMessageBox('Order Placed', 'Your order is being processed. Redirecting to cryptocurrency payment...');
+                setTimeout(() => {
+                    hideMessageBox();
+                    showPage('transaction-page'); // Show transaction page first
+                    setTimeout(() => {
+                        showPage('crypto-payment-page'); // Then go to crypto payment
+                    }, 3000); // Simulate 3 seconds of transaction processing
+                }, 1500);
+            } else if (selectedPaymentMethod === 'fiat') {
+                showMessageBox('Order Placed', 'Your order is being processed. Redirecting to fiat payment gateway...');
+                setTimeout(() => {
+                    hideMessageBox();
+                    showPage('fiat-payment-page'); // Go to simulated fiat payment page
+                }, 1500);
+            }
+        });
+
+        // Simulate Crypto Payment Confirmation
+        simulateCryptoPaymentButton.addEventListener('click', () => {
+            simulateCryptoPaymentButton.disabled = true;
+            simulateCryptoPaymentButton.textContent = 'Confirming Payment...';
+            simulateCryptoPaymentButton.classList.add('opacity-50', 'cursor-not-allowed');
+            paymentStatusMessage.classList.remove('hidden');
+            paymentStatusMessage.textContent = 'Payment received! Confirming on blockchain...';
+            paymentStatusMessage.style.color = 'orange';
+
+            // Simulate blockchain confirmation
+            setTimeout(() => {
+                paymentStatusMessage.textContent = 'Payment confirmed! Redirecting to order completion.';
+                paymentStatusMessage.style.color = 'green';
+                
+                // Deduct from wallet only AFTER payment is confirmed
+                if (currentPaymentAmountUsd > 0) { // Ensure there's an amount to deduct
+                    simulatedWalletBalanceUsd -= currentPaymentAmountUsd;
+                    updateWalletDisplay();
+                }
+
+                // Save the order to simulatedOrders
+                const newOrderId = Math.floor(Math.random() * 100000) + ''; // Simple random ID
+                const newOrder = {
+                    orderId: newOrderId,
+                    orderDate: new Date().toISOString(),
+                    totalAmount: currentPaymentAmountUsd,
+                    paymentMethod: lastOrderBillingDetails.paymentMethod,
+                    items: JSON.parse(JSON.stringify(cart)) // Deep copy cart items
+                };
+                simulatedOrders.push(newOrder);
+                localStorage.setItem('simulatedOrders', JSON.stringify(simulatedOrders));
+
+
+                cart = []; // Clear cart after successful order
+                saveCart();
+                updateCartCount();
+                setTimeout(() => {
+                    showPage('order-complete-page', lastOrderBillingDetails); // Pass billing details
+                    simulateCryptoPaymentButton.disabled = false;
+                    simulateCryptoPaymentButton.textContent = 'Simulate Payment Confirmation';
+                    simulateCryptoPaymentButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    paymentStatusMessage.classList.add('hidden');
+                }, 2000);
+            }, 4000); // Simulate 4 seconds for blockchain confirmation
+        });
+
+        // Copy to clipboard functionality
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetId = e.currentTarget.dataset.copyTarget;
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    const textToCopy = targetElement.textContent;
+                    // Use document.execCommand('copy') for better iframe compatibility
+                    const textarea = document.createElement('textarea');
+                    textarea.value = textToCopy;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        showMessageBox('Copied!', 'Address copied to clipboard.');
+                    } catch (err) {
+                        showMessageBox('Error', 'Failed to copy address. Please copy manually.');
+                        console.error('Failed to copy text:', err);
+                    }
+                    document.body.removeChild(textarea);
+                }
+            });
+        });
+
+        // Message Box OK button
+        messageBoxOkButton.addEventListener('click', hideMessageBox);
+
+        // --- Wallet Page Functionality ---
+        depositButton.addEventListener('click', () => {
+            const depositAmount = parseFloat(depositAmountInput.value);
+
+            if (isNaN(depositAmount) || depositAmount <= 0) {
+                showMessageBox('Invalid Amount', 'Please enter a valid positive number for deposit.');
+                return;
+            }
+
+            simulatedWalletBalanceUsd += depositAmount;
+            updateWalletDisplay();
+            showMessageBox('Deposit Successful', `$${depositAmount.toFixed(2)} has been added to your simulated wallet.`);
+            depositAmountInput.value = ''; // Clear input field
+        });
+
+        quickPaymentButton.addEventListener('click', () => {
+            const quickPaymentAmount = 10.00; // Example fixed amount for quick payment
+            currentPaymentAmountUsd = quickPaymentAmount; // Set the global payment amount
+
+            // Check if wallet balance is sufficient for quick payment
+            if (simulatedWalletBalanceUsd < quickPaymentAmount) {
+                showMessageBox('Insufficient Funds', `Your simulated wallet balance ($${simulatedWalletBalanceUsd.toFixed(2)}) is not enough for this quick payment ($${quickPaymentAmount.toFixed(2)}). Please deposit more funds.`);
+                return;
+            }
+
+            // Deduct amount from simulated wallet balance
+            simulatedWalletBalanceUsd -= quickPaymentAmount;
+            updateWalletDisplay(); // Update wallet display immediately
+
+            showMessageBox('Quick Payment', `Initiating a quick payment of $${quickPaymentAmount.toFixed(2)}. Redirecting to crypto payment page.`);
+            setTimeout(() => {
+                hideMessageBox();
+                showPage('crypto-payment-page');
+            }, 1500);
+        });
+
+        // Simulate Fiat Payment Confirmation
+        const simulateFiatPaymentButton = document.getElementById('simulate-fiat-payment');
+        const fiatPaymentStatusMessage = document.getElementById('fiat-payment-status-message');
+
+        if (simulateFiatPaymentButton) { // Check if element exists
+            simulateFiatPaymentButton.addEventListener('click', () => {
+                simulateFiatPaymentButton.disabled = true;
+                simulateFiatPaymentButton.textContent = 'Processing...';
+                simulateFiatPaymentButton.classList.add('opacity-50', 'cursor-not-allowed');
+                fiatPaymentStatusMessage.classList.remove('hidden');
+                fiatPaymentStatusMessage.textContent = 'Payment successful! Confirming order...';
+                fiatPaymentStatusMessage.style.color = 'green';
+
+                setTimeout(() => {
+                    // Save the order to simulatedOrders
+                    const newOrderId = Math.floor(Math.random() * 100000) + ''; // Simple random ID
+                    const newOrder = {
+                        orderId: newOrderId,
+                        orderDate: new Date().toISOString(),
+                        totalAmount: currentPaymentAmountUsd,
+                        paymentMethod: lastOrderBillingDetails.paymentMethod,
+                        items: JSON.parse(JSON.stringify(cart)) // Deep copy cart items
+                    };
+                    simulatedOrders.push(newOrder);
+                    localStorage.setItem('simulatedOrders', JSON.stringify(simulatedOrders));
+
+                    cart = []; // Clear cart after successful order
+                    saveCart();
+                    updateCartCount();
+                    showPage('order-complete-page', lastOrderBillingDetails); // Pass billing details
+                    simulateFiatPaymentButton.disabled = false;
+                    simulateFiatPaymentButton.textContent = 'Simulate Payment Success';
+                    simulateFiatPaymentButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    fiatPaymentStatusMessage.classList.add('hidden');
+                }, 2000); // Simulate 2 seconds for fiat payment confirmation
+            });
+        }
+
+        // --- Order Tracking Functionality ---
+        trackOrderButton.addEventListener('click', () => {
+            const orderId = orderIdInput.value.trim();
+            if (orderId) {
+                trackOrder(orderId);
+            } else {
+                orderStatusDisplay.classList.add('hidden');
+                orderTrackingMessage.classList.remove('hidden');
+                orderTrackingMessage.textContent = 'Please enter an Order ID.';
+                orderTrackingMessage.style.color = 'red';
+            }
+        });
+
+        // --- Event Delegation for Cart Items ---
+        // Listen for clicks on the cart items container
+        cartItemsDiv.addEventListener('click', (e) => {
+            // Check if the clicked element or its parent is a quantity button
+            const quantityBtn = e.target.closest('.quantity-btn');
+            if (quantityBtn) {
+                const productId = parseInt(quantityBtn.dataset.id);
+                const action = quantityBtn.dataset.action;
+                updateCartQuantity(productId, action);
+                return; // Stop further processing for this click
+            }
+
+            // Check if the clicked element or its parent is a remove button
+            const removeBtn = e.target.closest('.remove-from-cart-btn');
+            if (removeBtn) {
+                const productId = parseInt(removeBtn.dataset.id);
+                removeFromCart(productId);
+                return; // Stop further processing for this click
+            }
+        });
+
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+            showPage('home-page'); // Show home page on initial load
+            renderProducts(products); // Initial product render
+            updateWalletDisplay(); // Initialize wallet display
+            updateAuthButtonDisplay(); // Initialize auth button display
+        });
+    </script>
+</body>
+</html>
